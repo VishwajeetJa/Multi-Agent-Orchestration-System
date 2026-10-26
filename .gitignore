@@ -1,0 +1,52 @@
+# ── Secrets & Environment ──────────────────────────────────────────
+.env
+*.key
+*.pem
+*.p12
+secrets/
+
+# ── Python ─────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+pip-wheel-metadata/
+
+# ── Virtual Environments ───────────────────────────────────────────
+venv/
+env/
+.venv/
+ENV/
+
+# ── Testing & Coverage ─────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.coveragerc
+
+# ── IDE & OS ───────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Logs ───────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Celery ─────────────────────────────────────────────────────────
+celerybeat-schedule
+celerybeat.pid
+
+# ── Docker ─────────────────────────────────────────────────────────
+.docker/

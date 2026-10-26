@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  # ── Redis ───────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: nexusai-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Flask API ────────────────────────────────────────────────────
+  api:
+    build: .
+    container_name: nexusai-api
+    command: python app_new.py
+    ports:
+      - "5000:5000"
+    env_file: .env
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - .:/app
+
+  # ── Celery Worker ────────────────────────────────────────────────
+  worker:
+    build: .
+    container_name: nexusai-worker
+    command: celery -A workers.celery_app worker --loglevel=info --concurrency=4 -Q high,medium,low
+    env_file: .env
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - .:/app
+
+  # ── Flower Dashboard ─────────────────────────────────────────────
+  flower:
+    build: .
+    container_name: nexusai-flower
+    command: celery -A workers.celery_app flower --port=5555
+    ports:
+      - "5555:5555"
+    env_file: .env
+    depends_on:
+      - redis
+      - worker
+    restart: unless-stopped
+
+volumes:
+  redis-data:

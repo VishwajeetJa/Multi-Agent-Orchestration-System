@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NexusAI — Multi-Agent Orchestration System</title>
+  <meta name="description" content="Professional multi-agent AI orchestration system with real-time streaming, agent progress visualization, and intelligent task planning." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ── Sidebar ─────────────────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="14" stroke="url(#grad1)" stroke-width="2"/>
+            <circle cx="16" cy="8" r="3" fill="url(#grad1)"/>
+            <circle cx="8"  cy="22" r="3" fill="url(#grad2)"/>
+            <circle cx="24" cy="22" r="3" fill="url(#grad2)"/>
+            <line x1="16" y1="11" x2="9"  y2="20" stroke="url(#grad1)" stroke-width="1.5"/>
+            <line x1="16" y1="11" x2="23" y2="20" stroke="url(#grad1)" stroke-width="1.5"/>
+            <line x1="11" y1="22" x2="21" y2="22" stroke="url(#grad2)" stroke-width="1.5"/>
+            <defs>
+              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#6366f1"/>
+                <stop offset="100%" stop-color="#8b5cf6"/>
+              </linearGradient>
+              <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#06b6d4"/>
+                <stop offset="100%" stop-color="#3b82f6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">NexusAI</span>
+      </div>
+      <div class="status-pill" id="statusPill">
+        <span class="status-dot"></span>
+        <span id="statusText">Connecting…</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" id="navChat" onclick="switchTab('chat')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Chat</span>
+      </button>
+      <button class="nav-item" id="navSessions" onclick="switchTab('sessions')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <span>Sessions</span>
+      </button>
+      <button class="nav-item" id="navAgents" onclick="switchTab('agents')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/></svg>
+        <span>Agents</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="api-key-section">
+        <label class="label-sm">API Key</label>
+        <input type="password" id="apiKeyInput" class="input-sm" placeholder="dev-key-12345" value="dev-key-12345" />
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main Content ────────────────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- ════ CHAT TAB ════ -->
+    <section id="tabChat" class="tab-content active">
+      <div class="chat-layout">
+
+        <!-- Messages area -->
+        <div class="messages-area" id="messagesArea">
+          <!-- Welcome state -->
+          <div class="welcome-screen" id="welcomeScreen">
+            <div class="welcome-icon">
+              <div class="pulse-ring"></div>
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+                <circle cx="32" cy="16" r="8" fill="url(#wg1)"/>
+                <circle cx="12" cy="48" r="8" fill="url(#wg2)"/>
+                <circle cx="52" cy="48" r="8" fill="url(#wg2)"/>
+                <line x1="32" y1="24" x2="14" y2="42" stroke="url(#wg1)" stroke-width="2.5"/>
+                <line x1="32" y1="24" x2="50" y2="42" stroke="url(#wg1)" stroke-width="2.5"/>
+                <line x1="20" y1="48" x2="44" y2="48" stroke="url(#wg2)" stroke-width="2.5"/>
+                <defs>
+                  <linearGradient id="wg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient>
+                  <linearGradient id="wg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#06b6d4"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <h1 class="welcome-title">NexusAI Orchestration</h1>
+            <p class="welcome-subtitle">5 specialized AI agents working together in real-time</p>
+            <div class="capability-chips">
+              <span class="chip">🧠 Intelligent Planning</span>
+              <span class="chip">🔍 Web Research</span>
+              <span class="chip">📊 Deep Analysis</span>
+              <span class="chip">✍️ Professional Reports</span>
+              <span class="chip">🎯 Quality Review</span>
+            </div>
+            <div class="example-queries">
+              <p class="examples-label">Try asking:</p>
+              <button class="example-btn" onclick="fillQuery('Research the latest developments in quantum computing and write a professional report')">Research quantum computing developments</button>
+              <button class="example-btn" onclick="fillQuery('Analyze the current state of renewable energy adoption globally and provide recommendations')">Analyze renewable energy adoption</button>
+              <button class="example-btn" onclick="fillQuery('Write a comprehensive report on artificial intelligence trends in 2025')">AI trends in 2025 report</button>
+            </div>
+          </div>
+
+          <!-- Messages will be injected here -->
+          <div id="chatMessages" class="chat-messages" style="display:none"></div>
+        </div>
+
+        <!-- Agent Pipeline Visualization -->
+        <div class="pipeline-panel" id="pipelinePanel" style="display:none">
+          <h3 class="panel-title">Agent Pipeline</h3>
+          <div class="pipeline-steps" id="pipelineSteps"></div>
+          <div class="progress-bar-wrapper">
+            <div class="progress-bar" id="progressBar" style="width:0%"></div>
+          </div>
+        </div>
+
+        <!-- Input area -->
+        <div class="input-area">
+          <div class="input-wrapper">
+            <textarea
+              id="queryInput"
+              class="query-input"
+              placeholder="Describe your research task… (Shift+Enter for newline, Enter to send)"
+              rows="1"
+            ></textarea>
+            <div class="input-controls">
+              <select id="prioritySelect" class="priority-select" title="Priority">
+                <option value="medium">⚡ Medium</option>
+                <option value="high">🔥 High</option>
+                <option value="low">🐢 Low</option>
+              </select>
+              <button id="sendBtn" class="send-btn" onclick="sendQuery()" title="Send (Enter)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
+          </div>
+          <p class="input-hint">NexusAI uses Planner → Retriever → Analyzer → Writer → Critic pipeline</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ════ SESSIONS TAB ════ -->
+    <section id="tabSessions" class="tab-content">
+      <div class="page-header">
+        <h2>Active Sessions</h2>
+        <button class="btn-secondary" onclick="loadSessions()">↻ Refresh</button>
+      </div>
+      <div id="sessionsGrid" class="sessions-grid">
+        <div class="empty-state">No active sessions. Start a workflow to see it here.</div>
+      </div>
+    </section>
+
+    <!-- ════ AGENTS TAB ════ -->
+    <section id="tabAgents" class="tab-content">
+      <div class="page-header">
+        <h2>Agent Registry</h2>
+      </div>
+      <div class="agents-grid">
+        <div class="agent-card" data-role="planner">
+          <div class="agent-icon" style="background: linear-gradient(135deg, #6366f1, #8b5cf6)">🧠</div>
+          <h3>Planner</h3>
+          <p>Decomposes your query into a structured task graph (DAG). Decides which agents to use and in what order.</p>
+          <div class="agent-tags"><span class="tag">Task Planning</span><span class="tag">DAG Generation</span><span class="tag">Dependency Mapping</span></div>
+        </div>
+        <div class="agent-card" data-role="retriever">
+          <div class="agent-icon" style="background: linear-gradient(135deg, #06b6d4, #3b82f6)">🔍</div>
+          <h3>Retriever</h3>
+          <p>Gathers raw information using web search and URL fetching tools. Grounds responses in real-world data.</p>
+          <div class="agent-tags"><span class="tag">Web Search</span><span class="tag">URL Fetch</span><span class="tag">Data Collection</span></div>
+        </div>
+        <div class="agent-card" data-role="analyzer">
+          <div class="agent-icon" style="background: linear-gradient(135deg, #f59e0b, #ef4444)">📊</div>
+          <h3>Analyzer</h3>
+          <p>Identifies key patterns, insights, and structured knowledge from raw data. Uses math tools for quantitative analysis.</p>
+          <div class="agent-tags"><span class="tag">Pattern Recognition</span><span class="tag">Insight Extraction</span><span class="tag">Categorization</span></div>
+        </div>
+        <div class="agent-card" data-role="writer">
+          <div class="agent-icon" style="background: linear-gradient(135deg, #10b981, #059669)">✍️</div>
+          <h3>Writer</h3>
+          <p>Synthesizes analytical insights into a polished, professional report with executive summary and recommendations.</p>
+          <div class="agent-tags"><span class="tag">Report Writing</span><span class="tag">Structuring</span><span class="tag">Summarization</span></div>
+        </div>
+        <div class="agent-card" data-role="critic">
+          <div class="agent-icon" style="background: linear-gradient(135deg, #ec4899, #8b5cf6)">🎯</div>
+          <h3>Critic</h3>
+          <p>Quality evaluator. Scores output across 6 criteria and requests revisions if the quality threshold isn't met.</p>
+          <div class="agent-tags"><span class="tag">Quality Control</span><span class="tag">Scoring</span><span class="tag">Revision Loops</span></div>
+        </div>
+      </div>
+
+      <div class="tools-section">
+        <h3>Available Tools</h3>
+        <div class="tools-grid">
+          <div class="tool-card"><span class="tool-icon">🌐</span><strong>web_search</strong><span>DuckDuckGo search for current information</span></div>
+          <div class="tool-card"><span class="tool-icon">🔗</span><strong>fetch_url</strong><span>Read content of any public URL</span></div>
+          <div class="tool-card"><span class="tool-icon">🧮</span><strong>calculate</strong><span>Safe math expression evaluator</span></div>
+          <div class="tool-card"><span class="tool-icon">🕐</span><strong>get_datetime</strong><span>Current UTC date and time</span></div>
+          <div class="tool-card"><span class="tool-icon">📋</span><strong>summarize_text</strong><span>Condense long text to key points</span></div>
+          <div class="tool-card"><span class="tool-icon">📄</span><strong>json_format</strong><span>Pretty-print JSON responses</span></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
